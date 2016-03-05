@@ -239,9 +239,9 @@ public class LFBlockListener implements Listener
         if (event.isCancelled()) {
             return;
         }
-        final String lavaFurnace = event.getLine(0).trim().toLowerCase();
+        final String signmessage = event.getLine(0).trim();
         final int blockId = event.getBlock().getTypeId();
-        if (lavaFurnace.equals("[lavafurnace]") && blockId == 68) {
+        if (signmessage.equalsIgnoreCase(plugin.getMessage("sign.furnaceinput")) && blockId == 68) {
             final World world = event.getPlayer().getWorld();
             final String playerName = event.getPlayer().getName();
             final Player player = event.getPlayer();
@@ -266,8 +266,8 @@ public class LFBlockListener implements Listener
                 if (this.plugin.playerCanUseCommand(player, "lavafurnace.player.build") || this.plugin.playerCanUseCommand(player, "lavafurnace.admin.build")) {
                     if (count < forgeCount || this.plugin.playerCanUseCommand(player, "lavafurnace.admin.maxforgeoverride")) {
                         event.setLine(0, "");
-                        event.setLine(1, "&9[LAVAFURNACE]");
-                        event.setLine(1, event.getLine(1).replaceFirst("&([0-9a-f])", "\\§$1"));
+                        event.setLine(1, plugin.getMessage("sign.furnaceoutput"));
+                        // event.setLine(1, event.getLine(1).replaceFirst("&([0-9a-f])", "\\§$1"));
                         player.sendMessage(plugin.getMessage("user.feedback.completefurnace"));
                         final int id = this.furnacehelper.createFurnace(playerName, world.getName(), blockData, blockX, blockY, blockZ);
                         this.furnacehelper.furnaceBornFX(this.dataWriter.lfObject.get(id));

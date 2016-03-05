@@ -928,8 +928,18 @@ public class FurnaceHelper
     private String getPowerString(final int power) {
         final StringBuffer powerString = new StringBuffer();
         if (power > 0 && this.dataWriter.isShowFuelLevel()) {
-            final double percent = power / this.dataWriter.getFurnaceTimer() * 100.0;
-            powerString.append("§e" + (int)percent + "% Lava");
+            final double percent = power * 100.0 / this.dataWriter.getFurnaceTimer();
+            if (percent==100)
+                powerString.append(plugin.getMessage("sign.percentdisplay.full", ""+(int)percent));
+            else if (percent>66)
+                powerString.append(plugin.getMessage("sign.percentdisplay.high", ""+(int)percent));
+            else if (percent>33)
+                powerString.append(plugin.getMessage("sign.percentdisplay.mid", ""+(int)percent));
+            else if (percent>0)
+                powerString.append(plugin.getMessage("sign.percentdisplay.low", ""+(int)percent));
+            else
+                powerString.append(plugin.getMessage("sign.percentdisplay.empty", ""+(int)percent));
+            // powerString.append("§e" + (int)percent + "% Lava");
         }
         return powerString.toString();
     }

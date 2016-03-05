@@ -1,11 +1,21 @@
 ## YAML Template.
 ---
 error:
-    permission: "LavaFurnace: You do not have permissions for {0}:"
+    permission:     "LavaFurnace: You do not have permissions for {0}:"
 
 cooktime:
-    advanced: "LavaFurnace:  Cook Time  Advanced!"
-    normal: "LavaFurnace:  Cook Time  Normal!"
+    advanced:       "LavaFurnace: Cook Time  Advanced!"
+    normal:         "LavaFurnace: Cook Time  Normal!"
+    
+sign:  
+    furnaceinput:   "[lavafurnace]"
+    furnaceoutput:  "§5[LavaFurnace]"
+    percentdisplay: 
+        full:  "§2{0}§1 % Lava"
+        high:  "§a{0}§1 % Lava"
+        mid:   "§6{0}§1 % Lava"
+        low:   "§c{0}§1 % Lava"
+        empty: "§4{0}§1 % Lava"
         
 user:
     list:
@@ -17,9 +27,9 @@ user:
 
     feedback:
         multiplierinvalid:  "LavaFurnace: Multiplier {0} is not valid"
-        invalidspeed:       "LavaFurnace: Multiplier  {0} is not a valid speed."
-        nowsmeltsat:        "LavaFurnace: {0} 's  item  {1}  + now smelts at  {2} x"
-        invaliditem:        "LavaFurnace: Item  {0}  is not a valid item."
+        invalidspeed:       "LavaFurnace: Multiplier {0} is not a valid speed."
+        nowsmeltsat:        "LavaFurnace: {0}'s  item  {1}  + now smelts at  {2}x"
+        invaliditem:        "LavaFurnace: Item {0} is not a valid item."
         reloaded:           "LavaFurnace: plugin files reloaded. Check console for info."
         consoledisabled:    "LavaFurnace: Console commands are disabled. Enable them in the config file"
         
@@ -35,14 +45,13 @@ user:
         badplaceforlava:    "The lava refuses to leave your hand!\nIt must be the magic!"
         badplaceforblock:   "The magic resists your attempts to place this...\nIt must be the magic!"
         
-        completefurnace: "AQUA The magical runes glow with power...\n The Lava Furnace is completed!"
-        toomanyfurnaces: "AQUA The magical runes fizzle then fade away...\nThe magic is spread too thin to create another furnace..."
-        debugtoomanyfurnaces: " Too many furnaces error. You own {0}, you can have {1}"
-        nopermsforfurnaces: "AQUA The magical runes fizzle then fade away...\nThe magic does not yield to your command..."
+        completefurnace:    "The magical runes glow with power...\nThe Lava Furnace is completed!"
+        toomanyfurnaces:    "The magical runes fizzle then fade away...\nThe magic is spread too thin to create another furnace."
+        debugtoomanyfurnaces: "Too many furnaces error. You own {0}, you can have {1}"
+        nopermsforfurnaces: "The magical runes fizzle then fade away...\nYou feel insignificant."
         debugnopermsforfurnaces: "LavaFurnace:  Permissions error. Use debug level 4 for more info"
-        badfurnaceconstruction: "AQUA The magical runes fizzle then fade away...\nMaybe something is wrong with the furnace construction???"
+        badfurnaceconstruction: "The magical runes fizzle then fade away...\nMaybe something is wrong with the furnace construction?"
         
-        doorblocked: "AQUA The furnace door wont budge.\nYou can't open it!"
-        lidblocked: "AQUA The chest lid wont budge.\nYou can't open it!"
-        debugincrucible: "Face={0} in Crucible: {1}"
-        
+        doorblocked:        "The furnace door wont budge.\nYou can't open it!"
+        lidblocked:         "The chest lid wont budge.\nYou can't open it!"
+        debugincrucible:    "Face={0} in Crucible: {1}"

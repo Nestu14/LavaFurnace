@@ -194,7 +194,7 @@ public class LavaFurnace extends JavaPlugin
         if (this.datawriter.isEnableConsoleCommands()) {
             return this.commandHandler.inConsole(sender, cmd, commandLabel, split);
         }
-        sender.sendMessage(getMessage("cooktime.consoledisabled"));
+        sender.sendMessage(getMessage("feedback.consoledisabled"));
         return true;
     }
 
@@ -223,9 +223,9 @@ public class LavaFurnace extends JavaPlugin
         if (messages==null)
             return "no messages loaded";
         if ((result=messages.getString(id))==null)
-            return "No message defined for"+id;
+            return "No message defined for "+id;
         try {
-            formatted=MessageFormat.format(result, (Object[]) placeholders);
+            formatted=MessageFormat.format(result, placeholders);
             return formatted;
         } catch (IllegalArgumentException e) {
             return "Problem formatting "+id+" "+result+" with "+placeholders.length+" parameters ";
