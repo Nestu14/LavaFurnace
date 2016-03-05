@@ -76,7 +76,7 @@ public class CookTime
             if (newCookTime < multiplier) {
                 if (this.plugin.datawriter.getLFDebug() == 7) {
                     System.out.println("+---+");
-                    this.plugin.getServer().getConsoleSender().sendMessage("LavaFurnace: Cook Time " + ChatColor.RED + "Advanced!");
+                    this.plugin.getServer().getConsoleSender().sendMessage(plugin.getMessage("cooktime.advanced"));
                     System.out.println("For furnace " + fo.creator + ": " + fo.X + ", " + fo.Y + ", " + fo.Z + " in " + fo.world);
                     System.out.println("CookTime < multiplier " + newCookTime + " " + multiplier + " cooking " + cf.getInventory().getItem(0).getType());
                     System.out.println("LavaFurnace: modifyCookTime(fo)");
@@ -87,7 +87,7 @@ public class CookTime
             }
             else if (this.plugin.datawriter.getLFDebug() == 7) {
                 System.out.println("+---+");
-                this.plugin.getServer().getConsoleSender().sendMessage("LavaFurnace: Cook Time " + ChatColor.GREEN + "Normal!");
+                this.plugin.getServer().getConsoleSender().sendMessage(plugin.getMessage("cooktime.normal"));
                 System.out.println("For furnace " + fo.creator + ": " + fo.X + ", " + fo.Y + ", " + fo.Z + " in " + fo.world);
                 System.out.println("CookTime > multiplier " + newCookTime + " " + multiplier + " cooking " + cf.getInventory().getItem(0).getType());
                 System.out.println("LavaFurnace: modifyCookTime(fo)");
@@ -121,7 +121,7 @@ public class CookTime
             if (newCookTime < multiplier) {
                 if (this.plugin.datawriter.getLFDebug() == 7) {
                     System.out.println("+---+");
-                    this.plugin.getServer().getConsoleSender().sendMessage("LavaFurnace: Cook Time " + ChatColor.RED + "Advanced!");
+                    this.plugin.getServer().getConsoleSender().sendMessage(plugin.getMessage("cooktime.advanced"));
                     System.out.println("For furnace " + fo.creator + ": " + fo.X + ", " + fo.Y + ", " + fo.Z + " in " + fo.world);
                     System.out.println("CookTime < multiplier " + newCookTime + " " + multiplier + " cooking " + cf.getInventory().getItem(0).getType());
                     System.out.println("LavaFurnace: modifyCookTime(fo, userIndex)");
@@ -132,7 +132,7 @@ public class CookTime
             }
             else if (this.plugin.datawriter.getLFDebug() == 7) {
                 System.out.println("+---+");
-                this.plugin.getServer().getConsoleSender().sendMessage("LavaFurnace: Cook Time " + ChatColor.GREEN + "Normal!");
+                this.plugin.getServer().getConsoleSender().sendMessage(plugin.getMessage("cooktime.normal"));
                 System.out.println("For furnace " + fo.creator + ": " + fo.X + ", " + fo.Y + ", " + fo.Z + " in " + fo.world);
                 System.out.println("CookTime > multiplier " + newCookTime + " " + multiplier + " cooking " + cf.getInventory().getItem(0).getType());
                 System.out.println("LavaFurnace: modifyCookTime(fo, userIndex)");

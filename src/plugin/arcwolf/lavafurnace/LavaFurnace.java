@@ -4,6 +4,12 @@
 
 package plugin.arcwolf.lavafurnace;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import org.bukkit.command.Command;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -21,6 +27,8 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Server;
 import java.util.logging.Logger;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LavaFurnace extends JavaPlugin
@@ -42,6 +50,8 @@ public class LavaFurnace extends JavaPlugin
     private boolean permissionsEr;
     private boolean permissionsSet;
     public static Plugin plugin;
+    
+    YamlConfiguration messages;
     
     static {
         LOGGER = Logger.getLogger("Minecraft.LavaFurnace");
@@ -67,6 +77,9 @@ public class LavaFurnace extends JavaPlugin
         this.usercooktimehelper = new UserCookTimeHelper(this);
         this.commandHandler = new CommandHandler(this);
         this.cookTimeProcessing = new CookTime(this);
+        
+        createAndLoadMessages();
+        
         final LFBlockListener blockListener = new LFBlockListener(this);
         final LFPlayerListener playerListener = new LFPlayerListener(this);
         final LFEntityListener entityListener = new LFEntityListener(this);
@@ -181,7 +194,54 @@ public class LavaFurnace extends JavaPlugin
         if (this.datawriter.isEnableConsoleCommands()) {
             return this.commandHandler.inConsole(sender, cmd, commandLabel, split);
         }
-        sender.sendMessage("Console commands are disabled. Enable them in the config file");
+        sender.sendMessage(getMessage("cooktime.consoledisabled"));
         return true;
+    }
+
+    public boolean createAndLoadMessages() {
+        File messageFile=new File(getDataFolder(), "messages.yml");
+        if (!messageFile.exists()) {
+            messageFile.getParentFile().mkdirs();
+            copy(getResource("messages.yml"), messageFile);
+        }
+        YamlConfiguration tempMessages=new YamlConfiguration();
+        try {
+            tempMessages.load(messageFile);
+            messages=tempMessages;
+            return true;
+        } catch (IOException | InvalidConfigurationException e) {
+            LavaFurnace.LOGGER.log(Level.SEVERE, null, e);
+            // In case of error, initialze messages, but don't overwrite them.
+            if (messages==null)
+                messages=tempMessages;
+            return false;
+        }
+    }
+
+    public String getMessage(String id, String... placeholders) {
+        String result, formatted;
+        if (messages==null)
+            return "no messages loaded";
+        if ((result=messages.getString(id))==null)
+            return "No message defined for"+id;
+        try {
+            formatted=MessageFormat.format(result, (Object[]) placeholders);
+            return formatted;
+        } catch (IllegalArgumentException e) {
+            return "Problem formatting "+id+" "+result+" with "+placeholders.length+" parameters ";
+        }
+    }
+    
+    private void copy(InputStream in, File file) {
+        byte[] buf = new byte[1024];
+        int len;
+        try (OutputStream out = new FileOutputStream(file)) {
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+        } catch (IOException ex) {
+            LavaFurnace.LOGGER.log(Level.SEVERE, null, ex);
+        }
     }
 }

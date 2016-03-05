@@ -17,7 +17,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import plugin.arcwolf.lavafurnace.FurnaceObject;
 import org.bukkit.event.block.BlockDamageEvent;
-import java.util.Iterator;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.EventPriority;
@@ -30,9 +29,9 @@ import org.bukkit.event.Listener;
 
 public class LFBlockListener implements Listener
 {
-    private LavaFurnace plugin;
-    private FurnaceHelper furnacehelper;
-    private DataWriter dataWriter;
+    private final LavaFurnace plugin;
+    private final FurnaceHelper furnacehelper;
+    private final DataWriter dataWriter;
     
     public LFBlockListener(final LavaFurnace instance) {
         this.plugin = instance;
@@ -93,20 +92,21 @@ public class LFBlockListener implements Listener
             if (this.plugin.playerCanUseCommand(player, "lavafurnace.admin.destroy")) {
                 return;
             }
-            player.sendMessage(ChatColor.RED + "There is magic guarding this furnace!");
+            player.sendMessage(plugin.getMessage("user.feedback.furnaceguarded"));
             event.setCancelled(true);
         }
         else {
             if (!new ChestHelper(this.plugin, fo).isProductionChest(fo, blockX, blockY, blockZ, inWorld) || !this.dataWriter.isProductChests()) {
                 return;
             }
-            if (fo.creator.equals(player.getName()) && this.plugin.playerCanUseCommand(player, "lavafurnace.chests")) {
+            if (fo.creator.equals(player.getName())
+            && this.plugin.playerCanUseCommand(player, "lavafurnace.chests")) {
                 return;
             }
             if (this.plugin.playerCanUseCommand(player, "lavafurnace.admin.destroy")) {
                 return;
             }
-            player.sendMessage(ChatColor.RED + "There is magic guarding the chest!");
+            player.sendMessage(plugin.getMessage("user.feedback.chestguarded"));
             event.setCancelled(true);
         }
     }
@@ -132,12 +132,12 @@ public class LFBlockListener implements Listener
         if (brokeBlock.getType().equals((Object)Material.CHEST)) {
             if (new ChestHelper(this.plugin, fo).isProductionChest(fo, blockX, blockY, blockZ, inWorld) && this.dataWriter.isProductChests()) {
                 if (new ChestHelper(this.plugin, fo).isChestPair()) {
-                    player.sendMessage(ChatColor.GREEN + "The magic of the chests fade away...");
+                    player.sendMessage(plugin.getMessage("user.feedback.chestdestroyed"));
                 }
             }
         }
         else {
-            player.sendMessage(ChatColor.GREEN + "The magic in the furnace fades away...");
+            player.sendMessage(plugin.getMessage("user.feedback.furnacedestroyed"));
         }
     }
     
@@ -167,8 +167,8 @@ public class LFBlockListener implements Listener
                 return;
             }
             if (!this.plugin.playerCanUseCommand(player, "lavafurnace.chests") && this.dataWriter.isProductChests()) {
-                player.sendMessage(ChatColor.AQUA + "The magic resists your attempts to place this...");
-                player.sendMessage(ChatColor.RED + "Only the truly powerful can attempt this...");
+                player.sendMessage(plugin.getMessage("user.feedback.cannotplacethis"));
+                player.sendMessage(plugin.getMessage("user.feedback.cannotplacechest"));
                 event.setCancelled(true);
                 return;
             }
@@ -179,14 +179,13 @@ public class LFBlockListener implements Listener
         if (!this.furnacehelper.isFurnaceUpper(fo, aBlockX, aBlockY, aBlockZ) && !this.furnacehelper.isFurnaceUpper(fo, blockX, blockY, blockZ)) {
             if (this.furnacehelper.isBlockLavaInCrucible(fo, blockX, blockY, blockZ)) {
                 if (event.getBlock().getTypeId() != 11 && event.getBlock().getTypeId() != 10) {
-                    player.sendMessage(ChatColor.AQUA + "The magic resists your attempts to place this...");
-                    player.sendMessage(ChatColor.RED + "Only lava seems to work...");
+                    player.sendMessage(plugin.getMessage("user.feedback.cannotplacethis"));
+                    player.sendMessage(plugin.getMessage("user.feedback.canonlyplacelava"));
                     event.setCancelled(true);
                     return;
                 }
                 if ((!fo.creator.equals(playerName) || !this.plugin.playerCanUseCommand(player, "lavafurnace.player.lavablockfuel")) && !this.plugin.playerCanUseCommand(player, "lavafurnace.admin.lavablockfuel")) {
-                    player.sendMessage(ChatColor.AQUA + "The lava evaporates the instant it touches the furnace!");
-                    player.sendMessage(ChatColor.RED + "It must be the magic!");
+                    player.sendMessage(plugin.getMessage("user.feedback.nopermsforlava"));
                     event.setCancelled(true);
                     return;
                 }
@@ -202,19 +201,16 @@ public class LFBlockListener implements Listener
             return;
         }
         if (event.getBlock().getTypeId() == 8 || event.getBlock().getTypeId() == 9) {
-            player.sendMessage(ChatColor.AQUA + "The water refuses to leave your hand!");
-            player.sendMessage(ChatColor.RED + "It must be the magic!");
+            player.sendMessage(plugin.getMessage("user.feedback.badplaceforwater"));
             event.setCancelled(true);
             return;
         }
         if (event.getBlock().getTypeId() == 11 || event.getBlock().getTypeId() == 10) {
-            player.sendMessage(ChatColor.AQUA + "The lava refuses to leave your hand!");
-            player.sendMessage(ChatColor.RED + "It must be the magic!");
+            player.sendMessage(plugin.getMessage("user.feedback.badplaceforlava"));
             event.setCancelled(true);
             return;
         }
-        player.sendMessage(ChatColor.AQUA + "The magic resists your attempts to place this...");
-        player.sendMessage(ChatColor.RED + "Once built a Lava Furnace can not be modified...");
+        player.sendMessage(plugin.getMessage("user.feedback.nopermsforblock"));
         event.setCancelled(true);
     }
     
@@ -272,33 +268,29 @@ public class LFBlockListener implements Listener
                         event.setLine(0, "");
                         event.setLine(1, "&9[LAVAFURNACE]");
                         event.setLine(1, event.getLine(1).replaceFirst("&([0-9a-f])", "\\§$1"));
-                        player.sendMessage(ChatColor.AQUA + "The magical runes glow with power...");
-                        player.sendMessage(ChatColor.GREEN + "The Lava Furnace is completed!");
+                        player.sendMessage(plugin.getMessage("user.feedback.completefurnace"));
                         final int id = this.furnacehelper.createFurnace(playerName, world.getName(), blockData, blockX, blockY, blockZ);
                         this.furnacehelper.furnaceBornFX(this.dataWriter.lfObject.get(id));
                         this.dataWriter.writeFurnace(this.dataWriter.lfObject.get(id));
                     }
                     else {
-                        player.sendMessage(ChatColor.AQUA + "The magical runes fizzle then fade away...");
-                        player.sendMessage(ChatColor.RED + "The magic is spread too thin to create another furnace...");
+                        player.sendMessage(plugin.getMessage("user.feedback.toomanyfurnaces"));
                         if (this.dataWriter.getLFDebug() == 6 && this.plugin.playerCanUseCommand(player, "lavafurnace.admin.build")) {
-                            player.sendMessage("LavaFurnace: " + ChatColor.RED + "Too many furnaces error. You own " + count + " you can have " + forgeCount);
+                            player.sendMessage(plugin.getMessage("user.feedback.debugtoomanyfurnaces", ""+count, ""+forgeCount));
                         }
                         event.setLine(0, "");
                     }
                 }
                 else {
-                    player.sendMessage(ChatColor.AQUA + "The magical runes fizzle then fade away...");
-                    player.sendMessage(ChatColor.RED + "The magic does not yield to your command...");
+                    player.sendMessage(plugin.getMessage("user.feedback.nopermsforfurnaces"));
                     if (this.dataWriter.getLFDebug() == 6) {
-                        player.sendMessage("LavaFurnace: " + ChatColor.RED + "Permissions error. Use debug level 4 for more info");
+                        player.sendMessage(plugin.getMessage("user.feedback.debugnopermsforfurnaces"));
                     }
                     event.setLine(0, "");
                 }
             }
             else {
-                player.sendMessage(ChatColor.AQUA + "The magical runes fizzle then fade away...");
-                player.sendMessage(ChatColor.RED + "Maybe something is wrong with the furnace construction???");
+                player.sendMessage(plugin.getMessage("user.feedback.badfurnaceconstruction"));
                 if (this.dataWriter.getLFDebug() == 6 && this.plugin.playerCanUseCommand(player, "lavafurnace.admin.build")) {
                     this.dataWriter.setFurnaceDetectionl1(false);
                     this.dataWriter.setFurnaceDetectionl2(false);

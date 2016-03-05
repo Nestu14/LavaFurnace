@@ -58,13 +58,11 @@ public class LFPlayerListener implements Listener
                     if ((fo.creator.equals(playerName) && this.plugin.playerCanUseCommand(player, "lavafurnace.player.use")) || this.plugin.playerCanUseCommand(player, "lavafurnace.admin.use")) {
                         return;
                     }
-                    player.sendMessage(ChatColor.AQUA + "The furnace door wont budge.");
-                    player.sendMessage(ChatColor.RED + "You can't open it!");
+                    player.sendMessage(plugin.getMessage("user.feedback.doorblocked"));
                     event.setCancelled(true);
                 }
                 else if (blockClicked.getTypeId() == 54 && this.plugin.datawriter.isProductChests() && new ChestHelper(this.plugin, fo).isChestPair() && !this.plugin.datawriter.isFreeforallchests() && !this.plugin.playerCanUseCommand(player, "lavafurnace.chests")) {
-                    player.sendMessage(ChatColor.AQUA + "The chest lid wont budge.");
-                    player.sendMessage(ChatColor.RED + "You can't open it!");
+                    player.sendMessage(plugin.getMessage("user.feedback.lidblocked"));
                     event.setCancelled(true);
                 }
             }
@@ -88,22 +86,29 @@ public class LFPlayerListener implements Listener
         final int facing = fo.facing;
         final BlockFace face = event.getBlockFace();
         final World world = player.getWorld();
-        if (event.getBucket().getId() == 327) {
-            if (this.furnacehelper.wasLavaPlacedInCrucible(fo, blockX, blockY, blockZ, face) && ((fo.creator.equals(playerName) && this.plugin.playerCanUseCommand(player, "lavafurnace.player.fuel")) || this.plugin.playerCanUseCommand(player, "lavafurnace.admin.fuel"))) {
-                if (this.plugin.datawriter.getLFDebug() == 2) {
-                    player.sendMessage("Face= " + facing + " in Crucible? " + this.furnacehelper.wasLavaPlacedInCrucible(fo, blockX, blockY, blockZ, face));
-                }
-                this.plugin.furnaceHelper.initFurnace(fo, world);
+        //if (event.getBucket().getId() == 327) {
+        if (event.getBucket() == Material.LAVA_BUCKET) {
+            if (this.plugin.datawriter.getLFDebug() == 2) {
+                player.sendMessage(plugin.getMessage("user.feedback.debugincrucible", ""+facing, 
+                        ""+furnacehelper.wasLavaPlacedInCrucible(fo, blockX, blockY, blockZ, face)));
+            }
+            if (!this.furnacehelper.wasLavaPlacedInCrucible(fo, blockX, blockY, blockZ, face)) {
+                player.sendMessage(plugin.getMessage("user.feedback.badplaceforlava"));
+                event.setCancelled(true);
+            }
+            else if (
+                    (fo.creator.equals(playerName) && plugin.playerCanUseCommand(player, "lavafurnace.player.fuel"))
+                 || this.plugin.playerCanUseCommand(player, "lavafurnace.admin.fuel")
+            ) {
+                plugin.furnaceHelper.initFurnace(fo, world);
             }
             else {
-                player.sendMessage(ChatColor.AQUA + "The lava evaporates the instant it touches the furnace!");
-                player.sendMessage(ChatColor.RED + "It must be the magic!");
+                player.sendMessage(plugin.getMessage("user.feedback.nopermsforlava"));
                 event.setCancelled(true);
             }
         }
-        else if (event.getBucket().getId() == 326) {
-            player.sendMessage(ChatColor.AQUA + "The water refuses to leave the bucket!");
-            player.sendMessage(ChatColor.RED + "It must be the magic!");
+        else if (event.getBucket() == Material.WATER_BUCKET) {
+            player.sendMessage(plugin.getMessage("user.feedback.badplaceforwater"));
             event.setCancelled(true);
         }
     }

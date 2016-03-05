@@ -7,15 +7,12 @@ package plugin.arcwolf.lavafurnace;
 import java.text.DateFormat;
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
-import java.io.Reader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.io.Writer;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.HashMap;
@@ -323,24 +320,24 @@ public class DataWriter
     }
     
     private void convertFurnaceDatabase() {
-        String line = "";
+        String line;
         final StringBuffer updatedString = new StringBuffer();
-        FileWriter fwriter = null;
-        BufferedWriter writer = null;
+        FileWriter fwriter;
+        BufferedWriter writer;
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(this.oldFurnaceDatabase));
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains("#")) {
-                    updatedString.append(String.valueOf(line.replaceAll(",", LavaFurnace.SEPERATOR.toString())) + "\r\n");
-                }
-                else {
-                    updatedString.append(String.valueOf(line) + "\r\n");
+            try (BufferedReader reader = new BufferedReader(new FileReader(this.oldFurnaceDatabase))) {
+                while ((line = reader.readLine()) != null) {
+                    if (!line.contains("#")) {
+                        updatedString.append(String.valueOf(line.replaceAll(",", LavaFurnace.SEPERATOR.toString()))).append("\r\n");
+                    }
+                    else {
+                        updatedString.append(String.valueOf(line)).append("\r\n");
+                    }
                 }
             }
-            reader.close();
             final File backupOldFile = new File(this.pluginDirectory, "furnaces.bak");
             if (!this.oldFurnaceDatabase.renameTo(backupOldFile)) {
-                LavaFurnace.LOGGER.warning("LavaFurnace, " + this.oldFurnaceDatabase.getAbsolutePath() + " Data File could not be renamed! ");
+                LavaFurnace.LOGGER.log(Level.WARNING, "LavaFurnace, {0} Data File could not be renamed! ", this.oldFurnaceDatabase.getAbsolutePath());
                 LavaFurnace.LOGGER.warning("Rename or delete file manually! ");
             }
             fwriter = new FileWriter(this.furnaceDatabase);
@@ -352,43 +349,37 @@ public class DataWriter
             fwriter.close();
             LavaFurnace.LOGGER.info("LavaFurnace Furnace Data File successfully updated... ");
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e2) {
-            e2.printStackTrace();
-        }
-        catch (Exception e3) {
-            e3.printStackTrace();
+        catch (Exception e) {
+            LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error {0}", e);
         }
     }
     
     private void convertCookTimeDatabase() {
-        String line = "";
-        StringBuffer updatedString = new StringBuffer();
-        FileWriter fwriter = null;
-        BufferedWriter writer = null;
+        String line;
+        StringBuffer updatedString;
+        FileWriter fwriter;
+        BufferedWriter writer;
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(this.oldCookTimeDatabase));
-            updatedString = new StringBuffer();
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains("#")) {
-                    final int lineCounter = line.split(",").length;
-                    if (lineCounter != 16) {
-                        for (int i = lineCounter; i < 16; ++i) {
-                            line = String.valueOf(line) + ",1";
+            try (BufferedReader reader = new BufferedReader(new FileReader(this.oldCookTimeDatabase))) {
+                updatedString = new StringBuffer();
+                while ((line = reader.readLine()) != null) {
+                    if (!line.contains("#")) {
+                        final int lineCounter = line.split(",").length;
+                        if (lineCounter != 16) {
+                            for (int i = lineCounter; i < 16; ++i) {
+                                line = String.valueOf(line) + ",1";
+                            }
                         }
+                        updatedString.append(String.valueOf(line.replaceAll(",", LavaFurnace.SEPERATOR.toString())) + "\r\n");
                     }
-                    updatedString.append(String.valueOf(line.replaceAll(",", LavaFurnace.SEPERATOR.toString())) + "\r\n");
-                }
-                else {
-                    updatedString.append(String.valueOf(line) + "\r\n");
+                    else {
+                        updatedString.append(String.valueOf(line) + "\r\n");
+                    }
                 }
             }
-            reader.close();
             final File backupOldFile = new File(this.pluginDirectory, "cooktimes.bak");
             if (!this.oldCookTimeDatabase.renameTo(backupOldFile)) {
-                LavaFurnace.LOGGER.warning("LavaFurnace, " + this.oldCookTimeDatabase.getAbsolutePath() + " Data File could not be renamed! ");
+                LavaFurnace.LOGGER.log(Level.WARNING, "LavaFurnace, {0} Data File could not be renamed! ", this.oldCookTimeDatabase.getAbsolutePath());
                 LavaFurnace.LOGGER.warning("Rename or delete file manually! ");
             }
             fwriter = new FileWriter(this.cookTimeDatabase);
@@ -400,14 +391,8 @@ public class DataWriter
             fwriter.close();
             LavaFurnace.LOGGER.info("LavaFurnace CookTimes Data File successfully updated... ");
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e2) {
-            e2.printStackTrace();
-        }
-        catch (Exception e3) {
-            e3.printStackTrace();
+        catch (Exception e) {
+            LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error {0}", e);
         }
     }
     
@@ -516,7 +501,7 @@ public class DataWriter
                     LavaFurnace.LOGGER.info("Successfully created New Config File.");
                 }
                 catch (IOException e2) {
-                    LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error " + e2);
+                    LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error {0}", e2);
                 }
             }
             if (fwriter != null) {
@@ -524,7 +509,7 @@ public class DataWriter
                     fwriter.close();
                 }
                 catch (IOException e2) {
-                    LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error " + e2);
+                    LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error {0}", e2);
                 }
             }
             return;
@@ -537,7 +522,7 @@ public class DataWriter
                     LavaFurnace.LOGGER.info("Successfully created New Config File.");
                 }
                 catch (IOException e2) {
-                    LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error " + e2);
+                    LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error {0}", e2);
                 }
             }
             if (fwriter != null) {
@@ -545,7 +530,7 @@ public class DataWriter
                     fwriter.close();
                 }
                 catch (IOException e2) {
-                    LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error " + e2);
+                    LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error {0}", e2);
                 }
             }
         }
@@ -556,7 +541,7 @@ public class DataWriter
                 LavaFurnace.LOGGER.info("Successfully created New Config File.");
             }
             catch (IOException e2) {
-                LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error " + e2);
+                LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error {0}", e2);
             }
         }
         if (fwriter != null) {
@@ -564,35 +549,34 @@ public class DataWriter
                 fwriter.close();
             }
             catch (IOException e2) {
-                LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error " + e2);
+                LavaFurnace.LOGGER.log(Level.SEVERE, "LavaFurnace error {0}", e2);
             }
         }
     }
     
     public void deleteUser(final String userName) {
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(this.cookTimeDatabase));
-            String line = "";
-            final StringBuffer text = new StringBuffer();
-            boolean foundIt = false;
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains(userName)) {
-                    text.append(String.valueOf(line) + "\r\n");
-                }
-                else {
-                    if (foundIt) {
-                        continue;
+            final StringBuffer text;
+            try (BufferedReader reader = new BufferedReader(new FileReader(this.cookTimeDatabase))) {
+                String line;
+                text = new StringBuffer();
+                boolean foundIt = false;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.contains(userName)) {
+                        text.append(String.valueOf(line)).append("\r\n");
                     }
-                    foundIt = true;
+                    else {
+                        if (foundIt) {
+                            continue;
+                        }
+                        foundIt = true;
+                    }
                 }
             }
-            reader.close();
-            final FileWriter fwriter = new FileWriter(this.cookTimeDatabase);
-            final BufferedWriter writer = new BufferedWriter(fwriter);
-            writer.write(text.toString());
-            writer.flush();
-            writer.close();
-            fwriter.close();
+            try (FileWriter fwriter = new FileWriter(this.cookTimeDatabase); BufferedWriter writer = new BufferedWriter(fwriter)) {
+                writer.write(text.toString());
+                writer.flush();
+            }
         }
         catch (Exception e) {
             LavaFurnace.LOGGER.log(Level.SEVERE, "Exception while deleting objects in " + this.cooktimeFile, e);
@@ -601,34 +585,32 @@ public class DataWriter
     
     public void writeUser(final UserCookTimes userCookTimes) {
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(this.cookTimeDatabase));
-            String line = "";
-            String newline = "";
-            final StringBuffer text = new StringBuffer();
-            boolean foundIt = false;
-            newline = userCookTimes.toString();
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains(userCookTimes.userName)) {
-                    text.append(String.valueOf(line) + "\r\n");
-                }
-                else {
-                    if (foundIt) {
-                        continue;
+            final StringBuffer text;
+            try (BufferedReader reader = new BufferedReader(new FileReader(this.cookTimeDatabase))) {
+                String line;
+                String newline;
+                text = new StringBuffer();
+                boolean foundIt = false;
+                newline = userCookTimes.toString();
+                while ((line = reader.readLine()) != null) {
+                    if (!line.contains(userCookTimes.userName)) {
+                        text.append(String.valueOf(line)).append("\r\n");
                     }
-                    foundIt = true;
-                    text.append(String.valueOf(newline) + "\r\n");
-                }
+                    else {
+                        if (foundIt) {
+                            continue;
+                        }
+                        foundIt = true;
+                        text.append(String.valueOf(newline)).append("\r\n");
+                    }
+                }   if (!foundIt) {
+                    text.append(String.valueOf(newline)).append("\r\n");
             }
-            if (!foundIt) {
-                text.append(String.valueOf(newline) + "\r\n");
             }
-            reader.close();
-            final FileWriter fwriter = new FileWriter(this.cookTimeDatabase);
-            final BufferedWriter writer = new BufferedWriter(fwriter);
-            writer.write(text.toString());
-            writer.flush();
-            writer.close();
-            fwriter.close();
+            try (FileWriter fwriter = new FileWriter(this.cookTimeDatabase); BufferedWriter writer = new BufferedWriter(fwriter)) {
+                writer.write(text.toString());
+                writer.flush();
+            }
         }
         catch (Exception e1) {
             LavaFurnace.LOGGER.log(Level.SEVERE, "Exception while editing Users in " + this.cooktimeFile, e1);
@@ -644,28 +626,27 @@ public class DataWriter
         final String creator = fo.creator;
         final String world = fo.world;
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(this.furnaceDatabase));
-            String line = "";
-            final StringBuffer text = new StringBuffer();
-            boolean foundIt = false;
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains(String.valueOf(creator) + LavaFurnace.SEPERATOR + world + LavaFurnace.SEPERATOR + facing + LavaFurnace.SEPERATOR + X + LavaFurnace.SEPERATOR + Y + LavaFurnace.SEPERATOR + Z)) {
-                    text.append(String.valueOf(line) + "\r\n");
-                }
-                else {
-                    if (foundIt) {
-                        continue;
+            final StringBuffer text;
+            try (BufferedReader reader = new BufferedReader(new FileReader(this.furnaceDatabase))) {
+                String line;
+                text = new StringBuffer();
+                boolean foundIt = false;
+                while ((line = reader.readLine()) != null) {
+                    if (!line.contains(String.valueOf(creator) + LavaFurnace.SEPERATOR + world + LavaFurnace.SEPERATOR + facing + LavaFurnace.SEPERATOR + X + LavaFurnace.SEPERATOR + Y + LavaFurnace.SEPERATOR + Z)) {
+                        text.append(String.valueOf(line)).append("\r\n");
                     }
-                    foundIt = true;
+                    else {
+                        if (foundIt) {
+                            continue;
+                        }
+                        foundIt = true;
+                    }
                 }
             }
-            reader.close();
-            final FileWriter fwriter = new FileWriter(this.furnaceDatabase);
-            final BufferedWriter writer = new BufferedWriter(fwriter);
-            writer.write(text.toString());
-            writer.flush();
-            writer.close();
-            fwriter.close();
+            try (FileWriter fwriter = new FileWriter(this.furnaceDatabase); BufferedWriter writer = new BufferedWriter(fwriter)) {
+                writer.write(text.toString());
+                writer.flush();
+            }
         }
         catch (Exception e1) {
             LavaFurnace.LOGGER.log(Level.SEVERE, "Exception while deleting objects in " + this.furnacesFile, e1);
@@ -674,34 +655,32 @@ public class DataWriter
     
     public void writeFurnace(final FurnaceObject fo) {
         try {
-            final BufferedReader reader = new BufferedReader(new FileReader(this.furnaceDatabase));
-            String line = "";
-            String newline = "";
-            final StringBuffer text = new StringBuffer();
-            boolean foundIt = false;
-            newline = fo.toString();
-            while ((line = reader.readLine()) != null) {
-                if (!line.contains(String.valueOf(fo.creator) + LavaFurnace.SEPERATOR + fo.world + LavaFurnace.SEPERATOR + fo.facing + LavaFurnace.SEPERATOR + fo.X + LavaFurnace.SEPERATOR + fo.Y + LavaFurnace.SEPERATOR + fo.Z)) {
-                    text.append(String.valueOf(line) + "\r\n");
-                }
-                else {
-                    if (foundIt) {
-                        continue;
+            final StringBuffer text;
+            try (BufferedReader reader = new BufferedReader(new FileReader(this.furnaceDatabase))) {
+                String line;
+                String newline;
+                text = new StringBuffer();
+                boolean foundIt = false;
+                newline = fo.toString();
+                while ((line = reader.readLine()) != null) {
+                    if (!line.contains(String.valueOf(fo.creator) + LavaFurnace.SEPERATOR + fo.world + LavaFurnace.SEPERATOR + fo.facing + LavaFurnace.SEPERATOR + fo.X + LavaFurnace.SEPERATOR + fo.Y + LavaFurnace.SEPERATOR + fo.Z)) {
+                        text.append(String.valueOf(line)).append("\r\n");
                     }
-                    foundIt = true;
-                    text.append(String.valueOf(newline) + "\r\n");
-                }
+                    else {
+                        if (foundIt) {
+                            continue;
+                        }
+                        foundIt = true;
+                        text.append(String.valueOf(newline)).append("\r\n");
+                    }
+                }   if (!foundIt) {
+                    text.append(String.valueOf(newline)).append("\r\n");
             }
-            if (!foundIt) {
-                text.append(String.valueOf(newline) + "\r\n");
             }
-            reader.close();
-            final FileWriter fwriter = new FileWriter(this.furnaceDatabase);
-            final BufferedWriter writer = new BufferedWriter(fwriter);
-            writer.write(text.toString());
-            writer.flush();
-            writer.close();
-            fwriter.close();
+            try (FileWriter fwriter = new FileWriter(this.furnaceDatabase); BufferedWriter writer = new BufferedWriter(fwriter)) {
+                writer.write(text.toString());
+                writer.flush();
+            }
         }
         catch (Exception e1) {
             LavaFurnace.LOGGER.log(Level.SEVERE, "Exception while editing furnaces in " + this.furnacesFile, e1);
@@ -743,7 +722,7 @@ public class DataWriter
                     scanner.close();
                 }
             }
-            LavaFurnace.LOGGER.log(Level.INFO, "LavaFurnace loaded: " + furnaceCount + " Furnace(s)");
+            LavaFurnace.LOGGER.log(Level.INFO, "LavaFurnace loaded: {0} Furnace(s)", furnaceCount);
         }
         if (this.cookTimeDatabase.exists()) {
             Scanner scanner = null;
@@ -775,7 +754,7 @@ public class DataWriter
                     scanner.close();
                 }
             }
-            LavaFurnace.LOGGER.log(Level.INFO, "LavaFurnace loaded: " + userCount + " Custom Cook Time User(s)");
+            LavaFurnace.LOGGER.log(Level.INFO, "LavaFurnace loaded: {0} Custom Cook Time User(s)", userCount);
         }
         if (this.userGroupData.exists()) {
             Scanner scanner = null;
@@ -783,8 +762,8 @@ public class DataWriter
                 try {
                     scanner = new Scanner(this.userGroupData);
                     int lineCount = 1;
-                    String line2 = "";
-                    String groupName = "";
+                    String line2;
+                    String groupName;
                     while (scanner.hasNextLine()) {
                         line2 = scanner.nextLine();
                         if (!line2.startsWith("#")) {
@@ -794,7 +773,7 @@ public class DataWriter
                             final String[] split = line2.split(",");
                             if (split.length == 2) {
                                 groupName = split[0];
-                                int furnaceAmount = 0;
+                                int furnaceAmount;
                                 try {
                                     furnaceAmount = Integer.parseInt(split[1]);
                                     final LavaFurnaceUserGroups lfug = new LavaFurnaceUserGroups(groupName, furnaceAmount);
@@ -802,11 +781,11 @@ public class DataWriter
                                     ++this.userGroupCount;
                                 }
                                 catch (NumberFormatException e4) {
-                                    LavaFurnace.LOGGER.log(Level.SEVERE, "Error while reading LavaFurnace " + this.userGroups + " on line " + lineCount);
+                                    LavaFurnace.LOGGER.log(Level.SEVERE, "Error while reading LavaFurnace {0} on line {1}", new Object[]{this.userGroups, lineCount});
                                 }
                             }
                             else {
-                                LavaFurnace.LOGGER.log(Level.SEVERE, "Error while reading LavaFurnace " + this.userGroups + " on line " + lineCount);
+                                LavaFurnace.LOGGER.log(Level.SEVERE, "Error while reading LavaFurnace {0} on line {1}", new Object[]{this.userGroups, lineCount});
                             }
                             ++lineCount;
                         }
@@ -825,7 +804,7 @@ public class DataWriter
                     scanner.close();
                 }
             }
-            LavaFurnace.LOGGER.log(Level.INFO, "LavaFurnace loaded: " + this.userGroupCount + " User Group(s)");
+            LavaFurnace.LOGGER.log(Level.INFO, "LavaFurnace loaded: {0} User Group(s)", this.userGroupCount);
         }
         Label_4377: {
             if (this.configData.exists()) {
@@ -1457,11 +1436,11 @@ public class DataWriter
                             }
                         }
                     }
-                    if (this.erMsg.size() == 0) {
+                    if (this.erMsg.isEmpty()) {
                         LavaFurnace.LOGGER.info("LavaFurnace config file finished loading...");
                     }
                     else {
-                        LavaFurnace.LOGGER.info("LavaFurnace config file finished loading with " + this.erMsg.size() + " errors.");
+                        LavaFurnace.LOGGER.log(Level.INFO, "LavaFurnace config file finished loading with {0} errors.", this.erMsg.size());
                     }
                 }
                 catch (FileNotFoundException e2) {

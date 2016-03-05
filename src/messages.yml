@@ -1,0 +1,48 @@
+## YAML Template.
+---
+error:
+    permission: "LavaFurnace: You do not have permissions for {0}:"
+
+cooktime:
+    advanced: "LavaFurnace:  Cook Time  Advanced!"
+    normal: "LavaFurnace:  Cook Time  Normal!"
+        
+user:
+    list:
+        added:      "LavaFurnace: User {0} added to list."
+        alreadyin:  "LavaFurnace: User {0} already in list."
+        notin:      "LavaFurnace: User {0} not in list."
+        removed:    "LavaFurnace: User {0} removed from list."
+        header:     "User: {0}"
+
+    feedback:
+        multiplierinvalid:  "LavaFurnace: Multiplier {0} is not valid"
+        invalidspeed:       "LavaFurnace: Multiplier  {0} is not a valid speed."
+        nowsmeltsat:        "LavaFurnace: {0} 's  item  {1}  + now smelts at  {2} x"
+        invaliditem:        "LavaFurnace: Item  {0}  is not a valid item."
+        reloaded:           "LavaFurnace: plugin files reloaded. Check console for info."
+        consoledisabled:    "LavaFurnace: Console commands are disabled. Enable them in the config file"
+        
+        chestguarded:       "There is magic guarding the chest!"
+        furnaceguarded:     "There is magic guarding this furnace!"
+        chestdestroyed:     "The magic of the chests fade away..."
+        furnacedestroyed:   "The magic in the furnace fades away..."
+        cannotplacethis:    "The magic resists your attempts to place this..."
+        cannotplacechest:   "Only the truly powerful can attempt this... "
+        canonlyplacelava:   "Only lava seems to work..."
+        nopermsforlava:     "The lava evaporates the instant it touches the furnace!\nYou feel insignificant."
+        badplaceforwater:   "The water refuses to leave your hand!\nIt must be the magic!"
+        badplaceforlava:    "The lava refuses to leave your hand!\nIt must be the magic!"
+        badplaceforblock:   "The magic resists your attempts to place this...\nIt must be the magic!"
+        
+        completefurnace: "AQUA The magical runes glow with power...\n The Lava Furnace is completed!"
+        toomanyfurnaces: "AQUA The magical runes fizzle then fade away...\nThe magic is spread too thin to create another furnace..."
+        debugtoomanyfurnaces: " Too many furnaces error. You own {0}, you can have {1}"
+        nopermsforfurnaces: "AQUA The magical runes fizzle then fade away...\nThe magic does not yield to your command..."
+        debugnopermsforfurnaces: "LavaFurnace:  Permissions error. Use debug level 4 for more info"
+        badfurnaceconstruction: "AQUA The magical runes fizzle then fade away...\nMaybe something is wrong with the furnace construction???"
+        
+        doorblocked: "AQUA The furnace door wont budge.\nYou can't open it!"
+        lidblocked: "AQUA The chest lid wont budge.\nYou can't open it!"
+        debugincrucible: "Face={0} in Crucible: {1}"
+        

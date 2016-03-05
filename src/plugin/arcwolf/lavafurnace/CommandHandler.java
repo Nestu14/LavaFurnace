@@ -21,7 +21,7 @@ public class CommandHandler
         final String cmdname = cmd.getName().toLowerCase();
         if (cmdname.equalsIgnoreCase("lfadd")) {
             if (!this.plugin.playerCanUseCommand(player, "lavafurnace.admin.lfadd")) {
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.RED + "You do not have permissions for:");
+                player.sendMessage(plugin.getMessage("error.permission", "admin.lfadd"));
                 return false;
             }
             if (split.length == 0) {
@@ -34,15 +34,15 @@ public class CommandHandler
             if (id == -1) {
                 id = this.plugin.usercooktimehelper.createUser(split[0]);
                 this.plugin.datawriter.writeUser(this.plugin.datawriter.lfCook.get(id));
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.WHITE + "User " + ChatColor.GREEN + split[0] + ChatColor.WHITE + " added to list.");
+                player.sendMessage(plugin.getMessage("user.list.added", split[0]));
             }
             else {
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.WHITE + "User " + ChatColor.GREEN + split[0] + ChatColor.WHITE + " already in list.");
+                player.sendMessage(plugin.getMessage("user.list.alreadyin", split[0]));
             }
         }
         else if (cmdname.equalsIgnoreCase("lfrem")) {
             if (!this.plugin.playerCanUseCommand(player, "lavafurnace.admin.lfrem")) {
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.RED + "You do not have permissions for:");
+                player.sendMessage(plugin.getMessage("error.permission", "admin.lfrem"));
                 return false;
             }
             if (split.length == 0) {
@@ -53,17 +53,17 @@ public class CommandHandler
             }
             final int id = this.plugin.usercooktimehelper.findUser(split[0]);
             if (id == -1) {
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.WHITE + "User " + ChatColor.GREEN + split[0] + ChatColor.WHITE + " not in list.");
+                player.sendMessage(plugin.getMessage("user.list.notin", split[0]));
             }
             else {
                 this.plugin.datawriter.deleteUser(split[0]);
                 this.plugin.datawriter.lfCook.remove(id);
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.WHITE + "User " + ChatColor.GREEN + split[0] + ChatColor.WHITE + " removed from list.");
+                player.sendMessage(plugin.getMessage("user.list.removed", split[0]));
             }
         }
         else if (cmdname.equalsIgnoreCase("lfset")) {
             if (!this.plugin.playerCanUseCommand(player, "lavafurnace.admin.lfset")) {
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.RED + "You do not have permissions for:");
+                player.sendMessage(plugin.getMessage("error.permission", "admin.lfset"));
                 return false;
             }
             if (split.length != 3) {
@@ -77,60 +77,61 @@ public class CommandHandler
             }
             catch (Exception e) {
                 multiplier = 1;
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.RED + "Multiplier " + ChatColor.GREEN + split[2] + ChatColor.WHITE + " is not valid");
+                player.sendMessage(plugin.getMessage("user.feedback.multiplierinvalid", split[2]));
             }
             if (itemId != -1) {
                 if (userId != -1) {
                     if (this.plugin.usercooktimehelper.setCookTimeMultiplier(userId, itemId, multiplier)) {
                         this.plugin.datawriter.writeUser(this.plugin.datawriter.lfCook.get(userId));
-                        player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.GREEN + split[0] + "'s" + ChatColor.WHITE + " item " + ChatColor.GREEN + split[1] + ChatColor.WHITE + " now smelts at " + ChatColor.GREEN + split[2] + "x");
+                        player.sendMessage(plugin.getMessage("user.feedback.nowsmeltsat", split[0], split[1], split[2]));
                     }
                     else {
                         this.plugin.datawriter.writeUser(this.plugin.datawriter.lfCook.get(userId));
-                        player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.GREEN + split[2] + "x" + ChatColor.WHITE + " is not a valid multiplier.");
+                        player.sendMessage(plugin.getMessage("user.commands.multiplierinvalid", split[2]));
                     }
                 }
                 else {
-                    player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.WHITE + "User " + ChatColor.GREEN + split[0] + ChatColor.WHITE + " not in list.");
+                    player.sendMessage(plugin.getMessage("user.list.notin", split[0]));
                 }
             }
             else {
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.WHITE + "Item " + ChatColor.GREEN + split[1] + ChatColor.WHITE + " is not a valid item.");
+                player.sendMessage(plugin.getMessage("user.feedback.invaliditem", split[1]));
             }
         }
         else if (cmdname.equalsIgnoreCase("lflist")) {
             if (split.length == 1 && this.plugin.playerCanUseCommand(player, "lavafurnace.admin.lflist")) {
                 final int userId2 = this.plugin.usercooktimehelper.findUser(split[0]);
                 if (userId2 != -1) {
-                    player.sendMessage("User: " + ChatColor.GREEN + split[0]);
+                    player.sendMessage(plugin.getMessage("user.list.header", split[0]));
                     this.showLFList((CommandSender)player, userId2);
                 }
                 else {
-                    player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.WHITE + "User " + ChatColor.GREEN + split[0] + ChatColor.WHITE + " not in list.");
+                    player.sendMessage(plugin.getMessage("user.list.notin", split[0]));
                 }
             }
             else {
                 if (split.length != 0 || !this.plugin.playerCanUseCommand(player, "lavafurnace.player.lflist")) {
-                    player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.RED + "You do not have permissions for:");
+                    player.sendMessage(plugin.getMessage("error.permission", "lavafurnace.player.lflist"));
                     return false;
                 }
                 final int userId2 = this.plugin.usercooktimehelper.findUser(player.getName());
                 if (userId2 != -1) {
-                    player.sendMessage("User: " + ChatColor.GREEN + player.getName());
+                    player.sendMessage(plugin.getMessage("user.list.header", player.getName()));
                     this.showLFList((CommandSender)player, userId2);
                 }
                 else {
-                    player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.WHITE + "User " + ChatColor.GREEN + player.getName() + ChatColor.WHITE + " not in list.");
+                    player.sendMessage(plugin.getMessage("user.list.notin", player.getName()));
                 }
             }
         }
         else if (cmdname.equalsIgnoreCase("lfreload")) {
             if (!this.plugin.playerCanUseCommand(player, "lavafurnace.admin.lfreload")) {
-                player.sendMessage(ChatColor.YELLOW + "LavaFurnace: " + ChatColor.RED + "You do not have permissions for:");
+                player.sendMessage(plugin.getMessage("error.permission", "lavafurnace.player.lfreload"));
                 return false;
             }
             this.plugin.datawriter.reload();
-            player.sendMessage(ChatColor.GREEN + "LavaFurnace: " + ChatColor.GOLD + "plugin files reloaded. Check console for info.");
+            this.plugin.createAndLoadMessages();
+            player.sendMessage(plugin.getMessage("user.feedback.reloaded"));
         }
         return true;
     }
@@ -148,10 +149,10 @@ public class CommandHandler
             if (id == -1) {
                 id = this.plugin.usercooktimehelper.createUser(split[0]);
                 this.plugin.datawriter.writeUser(this.plugin.datawriter.lfCook.get(id));
-                sender.sendMessage("LavaFurnace: User " + split[0] + " added to list.");
+                sender.sendMessage(plugin.getMessage("user.list.added", split[0]));
             }
             else {
-                sender.sendMessage("LavaFurnace: User " + split[0] + " already in list.");
+                sender.sendMessage(plugin.getMessage("user.list.alreadyin", split[0]));
             }
         }
         else if (cmdname.equalsIgnoreCase("lfrem")) {
@@ -163,12 +164,12 @@ public class CommandHandler
             }
             final int id = this.plugin.usercooktimehelper.findUser(split[0]);
             if (id == -1) {
-                sender.sendMessage("LavaFurnace: User " + split[0] + " not in list.");
+                sender.sendMessage(plugin.getMessage("user.list.notin", split[0]));
             }
             else {
                 this.plugin.datawriter.deleteUser(split[0]);
                 this.plugin.datawriter.lfCook.remove(id);
-                sender.sendMessage("LavaFurnace: User " + split[0] + " removed from list.");
+                sender.sendMessage(plugin.getMessage("user.list.removed", split[0]));
             }
         }
         else if (cmdname.equalsIgnoreCase("lfset")) {
@@ -183,25 +184,25 @@ public class CommandHandler
             }
             catch (Exception e) {
                 multiplier = 1;
-                sender.sendMessage("LavaFurnace: Multiplier " + split[2] + " is not valid");
+                sender.sendMessage(plugin.getMessage("user.feedback.multiplierinvalid", split[2]));
             }
             if (itemId != -1) {
                 if (userId != -1) {
                     if (this.plugin.usercooktimehelper.setCookTimeMultiplier(userId, itemId, multiplier)) {
                         this.plugin.datawriter.writeUser(this.plugin.datawriter.lfCook.get(userId));
-                        sender.sendMessage("LavaFurnace: " + split[0] + "'s item " + split[1] + " smelting at " + split[2] + "x");
+                        sender.sendMessage(plugin.getMessage("user.feedback.nowsmeltsat", split[0], split[1], split[2]));
                     }
                     else {
                         this.plugin.datawriter.writeUser(this.plugin.datawriter.lfCook.get(userId));
-                        sender.sendMessage("LavaFurnace: " + split[2] + "x is not a valid speed.");
+                        sender.sendMessage(plugin.getMessage("user.feedback.invalidspeed", split[2]));
                     }
                 }
                 else {
-                    sender.sendMessage("LavaFurnace: User " + split[0] + " not in list.");
+                    sender.sendMessage(plugin.getMessage("user.list.notin", split[0]));
                 }
             }
             else {
-                sender.sendMessage("LavaFurnace: Item " + split[1] + " is not a valid item.");
+                sender.sendMessage(plugin.getMessage("user.feedback.invaliditem", split[1]));
             }
         }
         else if (cmdname.equalsIgnoreCase("lflist")) {
@@ -210,16 +211,16 @@ public class CommandHandler
             }
             final int userId2 = this.plugin.usercooktimehelper.findUser(split[0]);
             if (userId2 != -1) {
-                sender.sendMessage("User: " + ChatColor.YELLOW + split[0]);
+                sender.sendMessage(plugin.getMessage("user.list.header", split[0]));
                 this.showLFList(sender, userId2);
             }
             else {
-                sender.sendMessage("LavaFurnace: User " + ChatColor.YELLOW + split[0] + ChatColor.RESET + " not in list.");
+                sender.sendMessage(plugin.getMessage("user.list.notin", split[0]));
             }
         }
         else if (cmdname.equalsIgnoreCase("lfreload")) {
             this.plugin.datawriter.reload();
-            sender.sendMessage(ChatColor.GREEN + "LavaFurnace: " + ChatColor.GOLD + "plugin files reloaded.");
+            sender.sendMessage(plugin.getMessage("user.feedback.reloaded"));
         }
         return true;
     }

@@ -1,6 +1,6 @@
 name: LavaFurnace
 main: plugin.arcwolf.lavafurnace.LavaFurnace
-version: 1.900
+version: 1.901
 author: Giselbaer, stolen from ArcWolf
 website: http://dev.bukkit.org/server-mods/lavafurnace/
 description: >
