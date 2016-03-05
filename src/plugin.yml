@@ -1,12 +1,12 @@
 name: LavaFurnace
 main: plugin.arcwolf.lavafurnace.LavaFurnace
-version: 1.651
-author: ArcWolf
+version: 1.900
+author: Giselbaer, stolen from ArcWolf
 website: http://dev.bukkit.org/server-mods/lavafurnace/
 description: >
              Changes the way furnaces respond to being fueled by lava.
              This plugin adds a fun new way to fuel and control how a furnace works.
-
+depend: [Vault]
 
 commands:
   lfadd:

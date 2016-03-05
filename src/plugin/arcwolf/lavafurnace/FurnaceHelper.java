@@ -12,6 +12,8 @@ import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
+import java.util.logging.Level;
+import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.Chunk;
@@ -70,22 +72,71 @@ public class FurnaceHelper
         }
         return index;
     }
-    
+
+    public boolean wasLavaPlacedInCrucible(FurnaceObject fo, int blockX, int blockY, int blockZ, BlockFace face, boolean log) {
+        boolean b=wasLavaPlacedInCrucible(fo, blockX, blockY, blockZ, face);
+        if (log) {
+            Bukkit.getLogger().log(Level.INFO, "fo=({0},{1},{2}), fo.facing={3}", new Object[]{fo.X, fo.Y, fo.Z, fo.facing});
+            Bukkit.getLogger().log(Level.INFO, "block=({0},{1},{2}), face={3}", new Object[]{blockX, blockY, blockZ, face});
+            Bukkit.getLogger().log(Level.INFO, "BlockFace.UP={0}, equals={1}", new Object[]{BlockFace.UP, face.equals(BlockFace.UP)});
+            Bukkit.getLogger().log(Level.INFO, "BlockFace.SOUTH={0}, equals={1}", new Object[]{BlockFace.SOUTH, face.equals(BlockFace.SOUTH)});
+            Bukkit.getLogger().log(Level.INFO, "BlockFace.EAST={0}, equals={1}", new Object[]{BlockFace.EAST, face.equals(BlockFace.EAST)});
+            Bukkit.getLogger().log(Level.INFO, "BlockFace.NORTH={0}, equals={1}", new Object[]{BlockFace.NORTH, face.equals(BlockFace.NORTH)});
+            Bukkit.getLogger().log(Level.INFO, "BlockFace.WEST={0}, equals={1}", new Object[]{BlockFace.WEST, face.equals(BlockFace.WEST)});
+            Bukkit.getLogger().log(Level.INFO, "wasLavaPlaced.. returns {0}", b);
+        }
+        return b;
+    }
+
     public boolean wasLavaPlacedInCrucible(final FurnaceObject fo, final int blockX, final int blockY, final int blockZ, final BlockFace face) {
         final int fBlockX = fo.X;
         final int fBlockY = fo.Y;
         final int fBlockZ = fo.Z;
         final int LfFace = fo.facing;
+        
+        /* Seems that in spigot 1.9, Block is the block that lava is placed into,
+           not the block adjacent to it that was clicked by the user. So the blockface
+           isn't really relevant anymore. As i don't really understand all of this, i'll just
+           leave the original code after my switch.
+        */
+
+        switch (LfFace) {
+            case 2: return (fBlockX==blockX && fBlockY-1==blockY && fBlockZ+2==blockZ);
+            case 3: return (fBlockX==blockX && fBlockY-1==blockY && fBlockZ-2==blockZ);
+            case 4: return (fBlockX+2==blockX && fBlockY-1==blockY && fBlockZ==blockZ);
+            case 5: return (fBlockX-2==blockX && fBlockY-1==blockY && fBlockZ==blockZ);
+        }
+        
+        
         if (LfFace == 2) {
-            return (fBlockX == blockX && fBlockY - 2 == blockY && fBlockZ + 2 == blockZ && face.equals((Object)BlockFace.UP)) || (fBlockX - 1 == blockX && fBlockY - 1 == blockY && fBlockZ + 2 == blockZ && face.equals((Object)BlockFace.EAST)) || (fBlockX + 1 == blockX && fBlockY - 1 == blockY && fBlockZ + 2 == blockZ && face.equals((Object)BlockFace.WEST)) || (fBlockX == blockX && fBlockY - 1 == blockY && fBlockZ + 3 == blockZ && face.equals((Object)BlockFace.NORTH)) || (fBlockX == blockX && fBlockY - 1 == blockY && fBlockZ + 1 == blockZ && face.equals((Object)BlockFace.SOUTH));
+            return (fBlockX == blockX && fBlockY - 2 == blockY && fBlockZ + 2 == blockZ && face.equals((Object)BlockFace.UP))
+                || (fBlockX - 1 == blockX && fBlockY - 1 == blockY && fBlockZ + 2 == blockZ && face.equals((Object)BlockFace.EAST))
+                || (fBlockX + 1 == blockX && fBlockY - 1 == blockY && fBlockZ + 2 == blockZ && face.equals((Object)BlockFace.WEST)) 
+                || (fBlockX == blockX && fBlockY - 1 == blockY && fBlockZ + 3 == blockZ && face.equals((Object)BlockFace.NORTH)) 
+                || (fBlockX == blockX && fBlockY - 1 == blockY && fBlockZ + 1 == blockZ && face.equals((Object)BlockFace.SOUTH));
         }
         if (LfFace == 3) {
-            return (fBlockX == blockX && fBlockY - 2 == blockY && fBlockZ - 2 == blockZ && face.equals((Object)BlockFace.UP)) || (fBlockX + 1 == blockX && fBlockY - 1 == blockY && fBlockZ - 2 == blockZ && face.equals((Object)BlockFace.WEST)) || (fBlockX - 1 == blockX && fBlockY - 1 == blockY && fBlockZ - 2 == blockZ && face.equals((Object)BlockFace.EAST)) || (fBlockX == blockX && fBlockY - 1 == blockY && fBlockZ - 3 == blockZ && face.equals((Object)BlockFace.SOUTH)) || (fBlockX == blockX && fBlockY - 1 == blockY && fBlockZ - 1 == blockZ && face.equals((Object)BlockFace.NORTH));
+            return (fBlockX == blockX && fBlockY - 2 == blockY && fBlockZ - 2 == blockZ && face.equals((Object)BlockFace.UP))
+                || (fBlockX + 1 == blockX && fBlockY - 1 == blockY && fBlockZ - 2 == blockZ && face.equals((Object)BlockFace.WEST)) 
+                || (fBlockX - 1 == blockX && fBlockY - 1 == blockY && fBlockZ - 2 == blockZ && face.equals((Object)BlockFace.EAST))
+                || (fBlockX == blockX && fBlockY - 1 == blockY && fBlockZ - 3 == blockZ && face.equals((Object)BlockFace.SOUTH)) 
+                || (fBlockX == blockX && fBlockY - 1 == blockY && fBlockZ - 1 == blockZ && face.equals((Object)BlockFace.NORTH));
         }
         if (LfFace == 4) {
-            return (fBlockX + 2 == blockX && fBlockY - 2 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.UP)) || (fBlockX + 2 == blockX && fBlockY - 1 == blockY && fBlockZ - 1 == blockZ && face.equals((Object)BlockFace.SOUTH)) || (fBlockX + 2 == blockX && fBlockY - 1 == blockY && fBlockZ + 1 == blockZ && face.equals((Object)BlockFace.NORTH)) || (fBlockX + 3 == blockX && fBlockY - 1 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.WEST)) || (fBlockX + 1 == blockX && fBlockY - 1 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.EAST));
+            return (fBlockX + 2 == blockX && fBlockY - 2 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.UP))
+                || (fBlockX + 2 == blockX && fBlockY - 1 == blockY && fBlockZ - 1 == blockZ && face.equals((Object)BlockFace.SOUTH))
+                || (fBlockX + 2 == blockX && fBlockY - 1 == blockY && fBlockZ + 1 == blockZ && face.equals((Object)BlockFace.NORTH))
+                || (fBlockX + 3 == blockX && fBlockY - 1 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.WEST)) 
+                || (fBlockX + 1 == blockX && fBlockY - 1 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.EAST));
         }
-        return LfFace == 5 && ((fBlockX - 2 == blockX && fBlockY - 2 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.UP)) || (fBlockX - 2 == blockX && fBlockY - 1 == blockY && fBlockZ + 1 == blockZ && face.equals((Object)BlockFace.NORTH)) || (fBlockX - 2 == blockX && fBlockY - 1 == blockY && fBlockZ - 1 == blockZ && face.equals((Object)BlockFace.SOUTH)) || (fBlockX - 3 == blockX && fBlockY - 1 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.EAST)) || (fBlockX - 1 == blockX && fBlockY - 1 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.WEST)));
+        if (LfFace == 5) {
+            return (fBlockX - 2 == blockX && fBlockY - 2 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.UP))
+                || (fBlockX - 2 == blockX && fBlockY - 1 == blockY && fBlockZ + 1 == blockZ && face.equals((Object)BlockFace.NORTH))
+                || (fBlockX - 2 == blockX && fBlockY - 1 == blockY && fBlockZ - 1 == blockZ && face.equals((Object)BlockFace.SOUTH)) 
+                || (fBlockX - 3 == blockX && fBlockY - 1 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.EAST)) 
+                || (fBlockX - 1 == blockX && fBlockY - 1 == blockY && fBlockZ == blockZ && face.equals((Object)BlockFace.WEST));
+        }
+        return false;
     }
     
     public boolean isBlockLavaInCrucible(final FurnaceObject fo, final int blockX, final int blockY, final int blockZ) {
