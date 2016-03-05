@@ -1,0 +1,137 @@
+name: LavaFurnace
+main: plugin.arcwolf.lavafurnace.LavaFurnace
+version: 1.651
+author: ArcWolf
+website: http://dev.bukkit.org/server-mods/lavafurnace/
+description: >
+             Changes the way furnaces respond to being fueled by lava.
+             This plugin adds a fun new way to fuel and control how a furnace works.
+
+
+commands:
+  lfadd:
+    description: Adds a user to cook time database
+    usage: "Usage: /lfadd <username>"
+  lfrem:
+    description: Removes a user from cook time database
+    usage: "Usage: /lfrem <username>"
+  lfset:
+    description: Updates users cook time settings
+    usage: "Usage: /lfset <username> <item> <multiple>"
+  lflist:
+    description: Lists a users cook time settings
+    usage: "Usage: /lflist <username>"
+  lfreload:
+    description: Reloads lavafurnace datafiles
+    usage: "Usage: /lfreload"
+
+permissions:
+
+  lavafurnace.chests:
+    description: Allows a player to use Production chests
+    default: false
+
+  lavafurnace.player:
+    description: Allows a player to work with lavafurnaces
+    default: false
+    children:
+      lavafurnace.player.build: true
+      lavafurnace.player.fuel: true
+      lavafurnace.player.lavablockfuel: true
+      lavafurnace.player.destroy: true
+      lavafurnace.player.use: true
+      lavafurnace.player.lflist: true
+  lavafurnace.player.build:
+    description: Allows the player to build a lavafurnace
+  lavafurnace.player.fuel:
+    description: Allows the player to fuel a lavafurnace
+  lavafurnace.player.lavablockfuel:
+    description: Allows the player to fuel a lavafurnace with a lavablock
+  lavafurnace.player.destroy:
+    description: Allows the player to destroy a lavafurnace
+  lavafurnace.player.use:
+    description: Allows the player to use a lavafurnace
+  lavafurnace.player.lflist:
+    description: Allows the player to list their cook time settings
+    
+  lavafurnace.admin:
+    description: Allows a admin to work with lavafurnaces
+    default: op
+    children:
+      lavafurnace.admin.build: true
+      lavafurnace.admin.fuel: true
+      lavafurnace.admin.lavablockfuel: true
+      lavafurnace.admin.destroy: true
+      lavafurnace.admin.use: true
+      lavafurnace.admin.maxforgeoverride: true
+      lavafurnace.admin.lfset: true
+      lavafurnace.admin.lfadd: true
+      lavafurnace.admin.lfrem: true
+      lavafurnace.admin.lflist: true
+      lavafurnace.admin.lfreload: true
+  lavafurnace.admin.build:
+    description: Allows an admin to build a lavafurnace 
+  lavafurnace.admin.fuel:
+    description: Allows an admin to fuel any lavafurnace
+  lavafurnace.admin.lavablockfuel:
+    description: Allows an admin to fuel any lavafurnace with a lavablock
+  lavafurnace.admin.destroy:
+    description: Allows an admin to destory any lavafurnace
+  lavafurnace.admin.use:
+    description: Allows an admin to use any lavafurnace
+  lavafurnace.admin.maxforgeoverride:
+    description: Allows an admin to override the max forge limit
+  lavafurnace.admin.lfset:
+    description: Allows an admin to set a players per item cook time
+  lavafurnace.admin.lfadd:
+    description: Allows an admin to add a player to the cook time database
+  lavafurnace.admin.lfrem:
+    description: Allows an admin to remove a player from the cook time database
+  lavafurnace.admin.lflist:
+    description: Allows an admin to list any players cook time settings
+  lavafurnace.admin.lfreload:
+    description: Allows an admin to reload lavafurnace datafiles
+
+  lavafurnace.admin.*:
+    description: Give all admin and chest permissions for lavafurnace
+    default: false
+    children:
+      lavafurnace.admin.build: true
+      lavafurnace.admin.fuel: true
+      lavafurnace.admin.lavablockfuel: true
+      lavafurnace.admin.destroy: true
+      lavafurnace.admin.use: true
+      lavafurnace.admin.maxForgeOverride: true
+      lavafurnace.admin.lfset: true
+      lavafurnace.admin.lfadd: true
+      lavafurnace.admin.lfrem: true
+      lavafurnace.admin.lflist: true
+      lavafurnace.admin.lfreload: true
+      
+  lavafurnace.*:
+    description: Give all admin and chest permissions for lavafurnace
+    default: op
+    children:
+      lavafurnace.admin.build: true
+      lavafurnace.admin.fuel: true
+      lavafurnace.admin.lavablockfuel: true
+      lavafurnace.admin.destroy: true
+      lavafurnace.admin.use: true
+      lavafurnace.admin.maxForgeOverride: true
+      lavafurnace.chests: true
+      lavafurnace.admin.lfset: true
+      lavafurnace.admin.lfadd: true
+      lavafurnace.admin.lfrem: true
+      lavafurnace.admin.lflist: true
+      lavafurnace.admin.lfreload: true
+
+  lavafurnace.player.*:
+    description: Give all player permissions for lavafurnace
+    default: false
+    children:
+      lavafurnace.player.build: true
+      lavafurnace.player.fuel: true
+      lavafurnace.player.lavablockfuel: true
+      lavafurnace.player.destroy: true
+      lavafurnace.player.use: true
+      lavafurnace.player.lflist: true
