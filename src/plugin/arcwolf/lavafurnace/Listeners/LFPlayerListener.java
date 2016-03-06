@@ -86,12 +86,12 @@ public class LFPlayerListener implements Listener
         final int facing = fo.facing;
         final BlockFace face = event.getBlockFace();
         final World world = player.getWorld();
-        if (event.getBucket().getId() == 327) {
-        //if (event.getBucket() == Material.LAVA_BUCKET) {
-            if (this.plugin.datawriter.getLFDebug() == 2) {
+        //if (event.getBucket().getId() == 327) {
+        if (event.getBucket() == Material.LAVA_BUCKET) {
+             if (this.plugin.datawriter.getLFDebug() == 2) {
                 player.sendMessage(plugin.getMessage("user.feedback.debugincrucible", ""+facing, 
                         ""+furnacehelper.wasLavaPlacedInCrucible(fo, blockX, blockY, blockZ, face)));
-            }
+             }
             if (!this.furnacehelper.wasLavaPlacedInCrucible(fo, blockX, blockY, blockZ, face)) {
                 player.sendMessage(plugin.getMessage("user.feedback.badplaceforlava"));
                 event.setCancelled(true);

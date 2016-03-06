@@ -8,8 +8,9 @@ cooktime:
     normal:         "LavaFurnace: Cook Time  Normal!"
     
 sign:  
-    furnaceinput:   "[lavafurnace]"
-    furnaceoutput:  "§5[LavaFurnace]"
+    furnaceinput:       "[lavafurnace]"
+    furnaceoutput:      "§5[LavaFurnace]"
+    furnacerecognize:   "[lavafurnace]"
     percentdisplay: 
         full:  "§2{0}§1 % Lava"
         high:  "§a{0}§1 % Lava"
@@ -28,7 +29,7 @@ user:
     feedback:
         multiplierinvalid:  "LavaFurnace: Multiplier {0} is not valid"
         invalidspeed:       "LavaFurnace: Multiplier {0} is not a valid speed."
-        nowsmeltsat:        "LavaFurnace: {0}'s  item  {1}  + now smelts at  {2}x"
+        nowsmeltsat:        "LavaFurnace: {0}'s  item {1} + now smelts at  {2}x"
         invaliditem:        "LavaFurnace: Item {0} is not a valid item."
         reloaded:           "LavaFurnace: plugin files reloaded. Check console for info."
         consoledisabled:    "LavaFurnace: Console commands are disabled. Enable them in the config file"

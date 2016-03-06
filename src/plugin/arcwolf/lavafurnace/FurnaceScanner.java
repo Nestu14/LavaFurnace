@@ -25,21 +25,24 @@ public class FurnaceScanner implements Runnable
         int index = 0;
         boolean furnaceStart = false;
         Sign sign = null;
+        String inputmessage=plugin.getMessage("sign.furnaceinput").toLowerCase();
+        String outputmessage=plugin.getMessage("sign.furnaceoutput");
+        String recognizemessage=plugin.getMessage("sign.furnacerecognize").toLowerCase();
         for (final FurnaceObject fo : this.dataWriter.lfObject) {
             furnaceStart = fo.furnaceInit;
             try {
                 final World world = this.plugin.getWorld(fo.world);
                 if (world.getBlockAt(fo.X, fo.Y, fo.Z).getTypeId() == 68) {
                     sign = (Sign)world.getBlockAt(fo.X, fo.Y, fo.Z).getState();
-                    if (sign.getLine(0).contains("[LAVAFURNACE]") || sign.getLine(0).contains("[lavafurnace]")) {
+                    if (sign.getLine(0).toLowerCase().contains(inputmessage)) {
                         sign.setLine(0, "");
-                        sign.setLine(1, "&9[LAVAFURNACE]");
-                        sign.setLine(1, sign.getLine(1).replaceFirst("&([0-9a-f])", "\\§$1"));
+                        sign.setLine(1, outputmessage);
                         sign.update();
                     }
                 }
                 if (sign != null) {
-                    if (sign.getLine(0).contains("[LAVAFURNACE]") || sign.getLine(0).contains("[lavafurnace]") || sign.getLine(1).contains("[LAVAFURNACE]") || sign.getLine(1).contains("[lavafurnace]")) {
+                    if (sign.getLine(0).toLowerCase().contains(inputmessage)
+                    ||  sign.getLine(1).toLowerCase().contains(recognizemessage)) {
                         if (this.furnaceHelper.isFurnace(fo) || this.furnaceHelper.isFurnacePowered(fo)) {
                             if (!furnaceStart || fo.power != -1) {
                                 this.furnaceHelper.maintainLavaFurnace(fo);
